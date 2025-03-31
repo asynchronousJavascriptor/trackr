@@ -1,35 +1,56 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import JobForm from "./components/JobForm";
+import JobList from "./components/JobList";
+import FilterBar from "./components/FilterBar";
+
+const dummyJobs = [
+  {
+    id: 1,
+    company: "Google",
+    position: "Frontend Engineer",
+    location: "Remote",
+    status: "Applied",
+  },
+  {
+    id: 2,
+    company: "Microsoft",
+    position: "Backend Developer",
+    location: "Bangalore",
+    status: "Interviewing",
+  },
+  {
+    id: 3,
+    company: "Netflix",
+    position: "UI Designer",
+    location: "Mumbai",
+    status: "Offer",
+  },
+];
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [showForm, setShowForm] = useState(false);
+  const [jobs, setJobs] = useState(dummyJobs);
+  const [filter, setFilter] = useState("All");
+
+  const filteredJobs =
+    filter === "All" ? jobs : jobs.filter((job) => job.status === filter);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="min-h-screen bg-zinc-100 p-10">
+      <div className="flex justify-between items-center max-w-4xl mx-auto mb-6">
+        <h1 className="text-3xl font-bold text-zinc-800">JobTrackr</h1>
+        <Button onClick={() => setShowForm(!showForm)}>
+          {showForm ? "Close Form" : "Add New Job"}
+        </Button>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+
+      {showForm && <JobForm setShowForm={setShowForm} setJobs={setJobs} />}
+
+      <FilterBar current={filter} setFilter={setFilter} />
+      <JobList jobs={filteredJobs} />
+    </div>
+  );
 }
 
-export default App
+export default App;
